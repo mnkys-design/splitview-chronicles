@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 const Index = () => {
   return (
@@ -32,32 +33,45 @@ const Index = () => {
           </div>
         </ScrollArea>
 
-        {/* Right Panel - Blog Posts */}
+        {/* Right Panel - CV Table & Blog Teasers */}
         <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-card">
           <div className="p-8">
-            <div className="flex items-center justify-between mb-12">
-              <h2 className="brutalist-heading">chrustek.AI</h2>
-              <a href="https://instagram.com" className="text-muted-foreground hover:text-foreground" target="_blank" rel="noopener noreferrer">
-                Instagram
-              </a>
+            {/* CV Table */}
+            <div className="mb-12">
+              <h2 className="brutalist-heading mb-8">Experience</h2>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-mono text-sm">2023 - Present</TableCell>
+                    <TableCell>
+                      <span className="font-bold">Senior Art Director</span>
+                      <br />
+                      <span className="text-muted-foreground">Creative Agency XYZ</span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-mono text-sm">2020 - 2023</TableCell>
+                    <TableCell>
+                      <span className="font-bold">Art Director</span>
+                      <br />
+                      <span className="text-muted-foreground">Design Studio ABC</span>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-mono text-sm">2018 - 2020</TableCell>
+                    <TableCell>
+                      <span className="font-bold">Senior Designer</span>
+                      <br />
+                      <span className="text-muted-foreground">Digital Agency DEF</span>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
 
-            <div className="mb-8">
-              <h2 className="brutalist-heading mb-4">Michael Chruściński</h2>
-              <div className="flex gap-8 text-sm text-muted-foreground mb-8">
-                <span>Senior Art Director</span>
-                <span>AI, Generative, Generative Art</span>
-                <span>Gravida</span>
-              </div>
-              <p className="brutalist-text mb-12">
-                Nulla ipsum augue, viverra ac neque a, gravida tempus tellus. Nam vitae nisl risus.
-                Pellentes que ex libero pharetra sodales vel eu ante. Quisque interdum ipsum a ante
-                lacinia, a vehicula quam gravida.
-              </p>
-            </div>
-
+            {/* Blog Teasers */}
             <div className="space-y-8">
-              {[...Array(5)].map((_, i) => (
+              {[...Array(3)].map((_, i) => (
                 <article key={i} className="p-4 bg-background/5 rounded-sm">
                   <div className="flex justify-between text-sm text-muted-foreground mb-2">
                     <time>{`07-${24 + i}-00024`}</time>
@@ -65,19 +79,13 @@ const Index = () => {
                   </div>
                   <p className="brutalist-text">
                     Aenean ut bibendum ipsum. Nam vitae felis diam. Aenean ligula ligula, malesuada et
-                    volutpat ullamcorper, convallis quis dolor. Quisque elit Avellit, efficitur eu erat non,
-                    suscipit consectetur neque.
+                    volutpat ullamcorper, convallis quis dolor. Quisque elit Avellit.
                   </p>
                 </article>
               ))}
             </div>
 
             <div className="mt-12">
-              <p className="brutalist-text mb-4">
-                Nulla ipsum augue, viverra ac neque a, gravida tempus tellus. Nam vitae nisl risus.
-                Pellentes que ex libero pharetra sodales vel eu ante. Quisque interdum ipsum a ante
-                lacinia, a vehicula quam gravida. In hac habitasse platea dictum deus est.
-              </p>
               <Link to="/blog" className="brutalist-link text-sm">
                 Blog Archive →
               </Link>
