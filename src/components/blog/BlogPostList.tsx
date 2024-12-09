@@ -15,6 +15,15 @@ export const BlogPostList = ({ posts, isAuthenticated, onEdit }: BlogPostListPro
     <div className="space-y-8">
       {posts?.map((post) => (
         <Card key={post.id} className="p-6 group relative">
+          {post.featured_image_url && (
+            <div className="aspect-video mb-4 overflow-hidden rounded-md">
+              <img 
+                src={post.featured_image_url} 
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
           <time className="text-sm text-muted-foreground">
             {new Date(post.published_at).toLocaleDateString()}
           </time>
