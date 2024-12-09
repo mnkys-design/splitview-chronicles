@@ -27,6 +27,12 @@ const fetchLatestBlogPosts = async () => {
   return data;
 };
 
+// Helper function to get storage URL
+const getStorageUrl = (path: string) => {
+  const { data } = supabase.storage.from('content-images').getPublicUrl(path);
+  return data.publicUrl;
+};
+
 const Index = () => {
   const { data: workPosts, isLoading: isLoadingWork } = useQuery({
     queryKey: ['workPosts'],
@@ -59,7 +65,7 @@ const Index = () => {
             {/* Featured Image */}
             <div className="mb-12 aspect-[4/3] bg-muted overflow-hidden">
               <img 
-                src={`${supabase.storageUrl}/object/public/content-images/hero-image.jpg`}
+                src={getStorageUrl('hero-image.jpg')}
                 alt="Michael Chruscinski at work"
                 className="w-full h-full object-cover"
               />
@@ -85,7 +91,7 @@ const Index = () => {
                         />
                       ) : (
                         <img 
-                          src={`${supabase.storageUrl}/object/public/content-images/work-${index + 1}.jpg`}
+                          src={getStorageUrl(`work-${index + 1}.jpg`)}
                           alt={post.title || 'Work showcase'}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
