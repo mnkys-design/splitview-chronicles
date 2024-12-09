@@ -14,37 +14,43 @@ export const BlogPostList = ({ posts, isAuthenticated, onEdit }: BlogPostListPro
   return (
     <div className="space-y-8">
       {posts?.map((post) => (
-        <Card key={post.id} className="p-6 group relative max-h-[32rem] overflow-hidden">
-          {post.featured_image_url && (
-            <div className="aspect-video mb-4 overflow-hidden rounded-md">
-              <img 
-                src={post.featured_image_url} 
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-          <time className="text-sm text-muted-foreground">
-            {new Date(post.published_at).toLocaleDateString()}
-          </time>
-          <h2 className="brutalist-subheading mt-4 mb-4">{post.title}</h2>
-          <p className="brutalist-text text-muted-foreground mb-4 line-clamp-3">
-            {post.content}
-          </p>
-          <div className="flex items-center justify-between mt-auto">
-            <Link to={`/blog/${post.id}`} className="brutalist-link">
-              Read More →
-            </Link>
-            {isAuthenticated && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => onEdit(post)}
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
+        <Card key={post.id} className="p-6 group relative">
+          <div className="flex gap-6">
+            {post.featured_image_url && (
+              <div className="w-1/3 shrink-0">
+                <div className="aspect-[3/4] overflow-hidden rounded-md">
+                  <img 
+                    src={post.featured_image_url} 
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             )}
+            <div className="flex-1 flex flex-col">
+              <time className="text-sm text-muted-foreground">
+                {new Date(post.published_at).toLocaleDateString()}
+              </time>
+              <h2 className="brutalist-subheading mt-4 mb-4">{post.title}</h2>
+              <p className="brutalist-text text-muted-foreground mb-4 line-clamp-3 flex-1">
+                {post.content}
+              </p>
+              <div className="flex items-center justify-between mt-auto">
+                <Link to={`/blog/${post.id}`} className="brutalist-link">
+                  Read More →
+                </Link>
+                {isAuthenticated && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => onEdit(post)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         </Card>
       ))}
