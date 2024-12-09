@@ -1,35 +1,110 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const fetchWorkPosts = async () => {
+  const { data, error } = await supabase
+    .from('work_posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data;
+};
 
 const Work = () => {
-  // Sample UUIDs for demo purposes
-  const demoUUIDs = [
-    "123e4567-e89b-12d3-a456-426614174000",
-    "987fcdeb-51a2-43d8-b4c6-987654321000",
-    "456e789a-12cd-34ef-b456-789012345000",
-    "abc12345-6789-def0-1234-567890123000",
-    "def67890-1234-5678-9abc-def012345000",
-    "111aaa22-3333-4444-5555-666666666000"
-  ];
+  const { data: workPosts, isLoading } = useQuery({
+    queryKey: ['workPosts'],
+    queryFn: fetchWorkPosts,
+  });
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="brutalist-container py-12">
-        <h1 className="brutalist-heading mb-12">Work Index</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {demoUUIDs.map((uuid, i) => (
-            <Link key={uuid} to={`/work/${uuid}`} className="group">
-              <div className="aspect-video mb-4 bg-card diagonal-line group-hover:opacity-80 transition-opacity"></div>
-              <h2 className="brutalist-subheading mb-2">Work {i + 1}</h2>
-              <p className="brutalist-text text-muted-foreground mb-4">
-                Nulla ipsum augue, viverra ac neque a, gravida tempus tellus.
-              </p>
-              <span className="brutalist-link">
-                View Project →
-              </span>
-            </Link>
-          ))}
+      <ScrollArea className="h-[calc(100vh-4rem)]">
+        <div className="brutalist-container py-12">
+          {/* Introduction Section */}
+          <div className="mb-16">
+            <h1 className="brutalist-heading mb-6">Michael Chruscinski</h1>
+            <p className="brutalist-text text-muted-foreground mb-8 max-w-3xl">
+              Senior Art Director specializing in graphic optimization and process automation 
+              in the E-commerce sector. With over 15 years of experience, I've developed 
+              innovative design solutions that merge classical advertising principles with 
+              modern digital platforms.
+            </p>
+            
+            {/* Skills Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+              {[
+                { skill: "Adobe Photoshop", level: "Expert" },
+                { skill: "Adobe Illustrator", level: "Expert" },
+                { skill: "Adobe InDesign", level: "Expert" },
+                { skill: "AI Integration", level: "Advanced" },
+                { skill: "Process Optimization", level: "Expert" },
+                { skill: "E-commerce Design", level: "Expert" },
+              ].map((item) => (
+                <Card key={item.skill} className="border-2 border-foreground bg-transparent">
+                  <CardContent className="p-4">
+                    <div className="font-mono text-sm">{item.skill}</div>
+                    <div className="text-muted-foreground text-xs">{item.level}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Work Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {isLoading ? (
+              // Loading skeleton
+              [...Array(6)].map((_, i) => (
+                <div key={i} className="space-y-4 animate-pulse">
+                  <div className="aspect-video bg-muted"></div>
+                  <div className="h-4 bg-muted w-3/4"></div>
+                  <div className="h-4 bg-muted w-1/2"></div>
+                </div>
+              ))
+            ) : (
+              // Work posts grid
+              workPosts?.map((post) => (
+                <Link key={post.id} to={`/work/${post.id}`} className="group">
+                  <Card className="border-2 border-foreground bg-transparent hover:bg-accent/5 transition-colors">
+                    <CardHeader>
+                      <div className="aspect-video mb-4 overflow-hidden bg-muted">
+                        {post.main_image_url ? (
+                          <img 
+                            src={post.main_image_url} 
+                            alt={post.title}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full diagonal-line" />
+                        )}
+                      </div>
+                      <CardTitle className="text-lg font-mono">{post.title}</CardTitle>
+                      {post.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {post.description}
+                        </p>
+                      )}
+                    </CardHeader>
+                  </Card>
+                </Link>
+              ))
+            )}
+          </div>
+
+          {/* Contact Section */}
+          <div className="mt-16 pt-8 border-t-2 border-foreground">
+            <h2 className="brutalist-subheading mb-4">Get in Touch</h2>
+            <p className="text-muted-foreground">
+              Available for collaborations and consulting on process optimization 
+              and AI integration in design workflows.
+            </p>
+          </div>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
