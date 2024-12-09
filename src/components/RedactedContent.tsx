@@ -9,7 +9,7 @@ export const RedactedContent = ({ length = 100 }: RedactedContentProps) => {
   const truncatedText = fullText.slice(0, length);
   
   return (
-    <span className="font-mono text-muted-foreground leading-tight">
+    <span className="font-mono text-muted-foreground leading-tight text-sm">
       {truncatedText}
     </span>
   );
