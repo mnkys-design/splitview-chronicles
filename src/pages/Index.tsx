@@ -1,27 +1,14 @@
 import { Link } from "react-router-dom";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Fetch functions
-const fetchLatestWorkPosts = async () => {
+const fetchWorkPosts = async () => {
   const { data, error } = await supabase
     .from('work_posts')
     .select('*')
-    .order('created_at', { ascending: false })
-    .limit(8);
-  
-  if (error) throw error;
-  return data;
-};
-
-const fetchLatestBlogPosts = async () => {
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .order('published_at', { ascending: false })
-    .limit(3);
+    .order('created_at', { ascending: false });
   
   if (error) throw error;
   return data;
@@ -34,168 +21,101 @@ const getStorageUrl = (path: string) => {
 };
 
 const Index = () => {
-  const { data: workPosts, isLoading: isLoadingWork } = useQuery({
+  const { data: workPosts, isLoading } = useQuery({
     queryKey: ['workPosts'],
-    queryFn: fetchLatestWorkPosts,
-  });
-
-  const { data: blogPosts, isLoading: isLoadingBlog } = useQuery({
-    queryKey: ['blogPosts'],
-    queryFn: fetchLatestBlogPosts,
+    queryFn: fetchWorkPosts,
   });
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row">
-        {/* Left Panel - Work Showcase */}
-        <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-background">
-          <div className="p-8">
-            <div className="mb-12">
-              <p className="text-sm text-muted-foreground mb-4">Senior Art Director</p>
-              <h1 className="brutalist-heading mb-8">Michael Chruscinski</h1>
-              <p className="brutalist-text mb-12">
-                From classical advertising to AI-driven automation, I bridge the gap 
-                between traditional design principles and modern digital platforms. 
-                With over 15 years of experience, I specialize in optimizing creative 
-                workflows without compromising on quality.
-              </p>
+    <div className="min-h-screen bg-background">
+      <ScrollArea className="h-[calc(100vh-4rem)]">
+        <div className="brutalist-container py-12">
+          {/* Introduction Section */}
+          <div className="mb-16">
+            <h1 className="brutalist-heading mb-6">Michael Chruscinski</h1>
+            <p className="brutalist-text text-muted-foreground mb-8 max-w-3xl">
+              Senior Art Director specializing in graphic optimization and process automation 
+              in the E-commerce sector. With over 15 years of experience, I've developed 
+              innovative design solutions that merge classical advertising principles with 
+              modern digital platforms. My passion lies in integrating artificial intelligence 
+              and automation to enhance creative workflows without compromising on quality.
+            </p>
+            
+            {/* Skills Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+              {[
+                { skill: "Adobe Photoshop", level: "Expert" },
+                { skill: "Adobe Illustrator", level: "Expert" },
+                { skill: "Adobe InDesign", level: "Expert" },
+                { skill: "AI Integration", level: "Advanced" },
+                { skill: "Process Optimization", level: "Expert" },
+                { skill: "E-commerce Design", level: "Expert" },
+              ].map((item) => (
+                <Card key={item.skill} className="bg-muted hover:bg-muted/80 transition-colors">
+                  <CardContent className="p-4">
+                    <div className="font-mono text-sm">{item.skill}</div>
+                    <div className="text-muted-foreground text-xs">{item.level}</div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-
-            {/* Featured Image */}
-            <div className="mb-12 aspect-[4/3] bg-muted overflow-hidden">
-              <img 
-                src={getStorageUrl('hero-image.jpg')}
-                alt="Michael Chruscinski at work"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Work Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-12">
-              {isLoadingWork ? (
-                // Loading skeleton
-                [...Array(8)].map((_, i) => (
-                  <div key={i} className="aspect-square bg-muted animate-pulse"></div>
-                ))
-              ) : (
-                // Work posts grid
-                workPosts?.map((post, index) => (
-                  <Link key={post.id} to={`/work/${post.id}`} className="group">
-                    <div className="aspect-square bg-muted overflow-hidden">
-                      {post.main_image_url ? (
-                        <img 
-                          src={post.main_image_url} 
-                          alt={post.title}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      ) : (
-                        <img 
-                          src={getStorageUrl(`work-${index + 1}.jpg`)}
-                          alt={post.title || 'Work showcase'}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      )}
-                    </div>
-                  </Link>
-                ))
-              )}
-            </div>
-
-            <Link to="/work" className="brutalist-link text-sm">
-              View Full Portfolio →
-            </Link>
           </div>
-        </ScrollArea>
 
-        {/* Right Panel - Experience & Blog */}
-        <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-card">
-          <div className="p-8">
-            {/* Experience Table */}
-            <div className="mb-12">
-              <h2 className="brutalist-heading mb-8">Experience</h2>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-mono text-sm">2020 - Present</TableCell>
-                    <TableCell>
-                      <span className="font-bold">Senior Art Director</span>
-                      <br />
-                      <span className="text-muted-foreground">Remazing GmbH</span>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Leading AI integration and process automation initiatives for 
-                        E-commerce design optimization.
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-mono text-sm">2015 - 2020</TableCell>
-                    <TableCell>
-                      <span className="font-bold">Art Director</span>
-                      <br />
-                      <span className="text-muted-foreground">WirWinzer GmbH</span>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Spearheaded rebranding efforts and established design systems 
-                        for digital platforms.
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-mono text-sm">2008 - 2015</TableCell>
-                    <TableCell>
-                      <span className="font-bold">Senior Designer</span>
-                      <br />
-                      <span className="text-muted-foreground">LunchNow.com</span>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Led the Frankfurt launch campaign and developed automated 
-                        design workflows.
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-
-            {/* Latest Insights */}
-            <div className="mb-8">
-              <h3 className="brutalist-subheading mb-6">Latest Insights</h3>
-              <div className="space-y-8">
-                {isLoadingBlog ? (
-                  // Loading skeleton
-                  [...Array(3)].map((_, i) => (
-                    <div key={i} className="p-4 bg-background/5 rounded-sm animate-pulse">
-                      <div className="h-4 bg-background/10 rounded w-1/3 mb-2"></div>
-                      <div className="h-16 bg-background/10 rounded"></div>
-                    </div>
-                  ))
-                ) : (
-                  // Blog posts
-                  blogPosts?.map((post) => (
-                    <Link key={post.id} to={`/blog/${post.id}`}>
-                      <article className="p-4 bg-background/5 rounded-sm hover:bg-background/10 transition-colors">
-                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
-                          <time>{new Date(post.published_at).toLocaleDateString()}</time>
-                          <span>({String(post.id).slice(-3)})</span>
-                        </div>
-                        <h4 className="font-mono text-base mb-2">{post.title}</h4>
-                        <p className="brutalist-text line-clamp-2 text-muted-foreground">
-                          {post.content}
+          {/* Work Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {isLoading ? (
+              // Loading skeleton
+              [...Array(6)].map((_, i) => (
+                <div key={i} className="space-y-4 animate-pulse">
+                  <div className="aspect-video bg-muted"></div>
+                  <div className="h-4 bg-muted w-3/4"></div>
+                  <div className="h-4 bg-muted w-1/2"></div>
+                </div>
+              ))
+            ) : (
+              // Work posts grid
+              workPosts?.map((post, index) => (
+                <Link key={post.id} to={`/work/${post.id}`} className="group">
+                  <Card className="bg-muted hover:bg-muted/80 transition-colors">
+                    <CardHeader>
+                      <div className="aspect-video mb-4 overflow-hidden bg-background">
+                        {post.main_image_url ? (
+                          <img 
+                            src={post.main_image_url} 
+                            alt={post.title}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        ) : (
+                          <img 
+                            src={getStorageUrl(`work-${index + 1}.jpg`)}
+                            alt={post.title || 'Work showcase'}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        )}
+                      </div>
+                      <CardTitle className="text-lg font-mono">{post.title}</CardTitle>
+                      {post.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {post.description}
                         </p>
-                      </article>
-                    </Link>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <Link to="/blog" className="brutalist-link text-sm">
-                Read More Insights →
-              </Link>
-            </div>
+                      )}
+                    </CardHeader>
+                  </Card>
+                </Link>
+              ))
+            )}
           </div>
-        </ScrollArea>
-      </div>
+
+          {/* Contact Section */}
+          <div className="mt-16 pt-8 border-t border-muted">
+            <h2 className="brutalist-subheading mb-4">Get in Touch</h2>
+            <p className="text-muted-foreground">
+              Available for collaborations and consulting on process optimization 
+              and AI integration in design workflows.
+            </p>
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 };
