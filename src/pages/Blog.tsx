@@ -17,7 +17,7 @@ const Blog = () => {
   const [editedContent, setEditedContent] = useState("");
 
   const { data: blogPosts, isLoading } = useBlogPosts();
-  const { updatePost, createPost } = useBlogMutations();
+  const { updatePost } = useBlogMutations();
 
   const handleEdit = (post: BlogPost) => {
     setEditingPost(post.id);
@@ -38,14 +38,6 @@ const Blog = () => {
     setEditingPost(null);
     setEditedTitle("");
     setEditedContent("");
-  };
-
-  const handleCreatePost = () => {
-    createPost.mutate(undefined, {
-      onSuccess: (data) => {
-        navigate(`/blog/${data.id}`);
-      },
-    });
   };
 
   if (isLoading) {
@@ -73,7 +65,7 @@ const Blog = () => {
         <div className="flex justify-between items-center mb-12">
           <h1 className="brutalist-heading">Blog Archive</h1>
           {session && (
-            <Button onClick={handleCreatePost} className="flex items-center">
+            <Button onClick={() => navigate('/blog/new')} className="flex items-center">
               <Plus className="h-4 w-4 mr-2" />
               New Post
             </Button>

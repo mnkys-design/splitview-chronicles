@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { WorkIntroSection } from "@/components/work/WorkIntroSection";
 import { SkillsGrid } from "@/components/work/SkillsGrid";
 import { WorkGrid } from "@/components/work/WorkGrid";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useSessionContext } from "@supabase/auth-helpers-react";
 
-// Fetch functions
 const fetchWorkPosts = async () => {
   const { data, error } = await supabase
     .from('work_posts')
@@ -40,6 +43,8 @@ const fetchSkills = async () => {
 
 const Work = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { session } = useSessionContext();
   const queryClient = useQueryClient();
 
   const { data: workPosts, isLoading: isLoadingPosts } = useQuery({
@@ -57,7 +62,6 @@ const Work = () => {
     queryFn: fetchSkills,
   });
 
-  // Mutation for updating content sections
   const updateContentMutation = useMutation({
     mutationFn: async ({ id, title, content }: { id: string, title: string, content: string }) => {
       const { error } = await supabase
@@ -92,6 +96,16 @@ const Work = () => {
     <div className="min-h-screen bg-background">
       <ScrollArea className="h-[calc(100vh-4rem)]">
         <div className="brutalist-container py-12">
+          <div className="flex justify-between items-center mb-12">
+            <h1 className="brutalist-heading">Work</h1>
+            {session && (
+              <Button onClick={() => navigate('/work/new')} className="flex items-center">
+                <Plus className="h-4 w-4 mr-2" />
+                New Work
+              </Button>
+            )}
+          </div>
+          
           <WorkIntroSection 
             introBio={introBio} 
             isLoading={isLoadingIntro}
