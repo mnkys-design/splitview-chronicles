@@ -177,7 +177,7 @@ const BlogPost = () => {
                 <div className="brutalist-text text-muted-foreground whitespace-pre-wrap">
                   {post.content}
                 </div>
-                {session && (
+                {!!session && (
                   <Button
                     variant="ghost"
                     size="icon"
