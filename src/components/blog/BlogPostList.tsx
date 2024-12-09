@@ -14,7 +14,7 @@ export const BlogPostList = ({ posts, isAuthenticated, onEdit }: BlogPostListPro
   return (
     <div className="space-y-8">
       {posts?.map((post) => (
-        <Card key={post.id} className="p-6 group relative">
+        <Card key={post.id} className="p-6 group relative max-h-[32rem] overflow-hidden">
           {post.featured_image_url && (
             <div className="aspect-video mb-4 overflow-hidden rounded-md">
               <img 
@@ -31,7 +31,7 @@ export const BlogPostList = ({ posts, isAuthenticated, onEdit }: BlogPostListPro
           <p className="brutalist-text text-muted-foreground mb-4 line-clamp-3">
             {post.content}
           </p>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-auto">
             <Link to={`/blog/${post.id}`} className="brutalist-link">
               Read More →
             </Link>
