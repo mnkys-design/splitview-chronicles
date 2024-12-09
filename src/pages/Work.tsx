@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Fetch functions
 const fetchWorkPosts = async () => {
   const { data, error } = await supabase
     .from('work_posts')
@@ -14,10 +15,46 @@ const fetchWorkPosts = async () => {
   return data;
 };
 
+const fetchContentSection = async (identifier: string) => {
+  const { data, error } = await supabase
+    .from('content_sections')
+    .select('*')
+    .eq('identifier', identifier)
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+const fetchSkills = async () => {
+  const { data, error } = await supabase
+    .from('skills')
+    .select('*')
+    .order('display_order', { ascending: true });
+  
+  if (error) throw error;
+  return data;
+};
+
 const Work = () => {
-  const { data: workPosts, isLoading } = useQuery({
+  const { data: workPosts, isLoading: isLoadingPosts } = useQuery({
     queryKey: ['workPosts'],
     queryFn: fetchWorkPosts,
+  });
+
+  const { data: introBio, isLoading: isLoadingIntro } = useQuery({
+    queryKey: ['contentSection', 'intro_bio'],
+    queryFn: () => fetchContentSection('intro_bio'),
+  });
+
+  const { data: getInTouch, isLoading: isLoadingContact } = useQuery({
+    queryKey: ['contentSection', 'get_in_touch'],
+    queryFn: () => fetchContentSection('get_in_touch'),
+  });
+
+  const { data: skills, isLoading: isLoadingSkills } = useQuery({
+    queryKey: ['skills'],
+    queryFn: fetchSkills,
   });
 
   return (
@@ -26,38 +63,42 @@ const Work = () => {
         <div className="brutalist-container py-12">
           {/* Introduction Section */}
           <div className="mb-16">
-            <h1 className="brutalist-heading mb-6">Michael Chruscinski</h1>
+            <h1 className="brutalist-heading mb-6">
+              {isLoadingIntro ? "Loading..." : introBio?.title}
+            </h1>
             <p className="brutalist-text text-muted-foreground mb-8 max-w-3xl">
-              Senior Art Director specializing in graphic optimization and process automation 
-              in the E-commerce sector. With over 15 years of experience, I've developed 
-              innovative design solutions that merge classical advertising principles with 
-              modern digital platforms. My passion lies in integrating artificial intelligence 
-              and automation to enhance creative workflows without compromising on quality.
+              {isLoadingIntro ? "Loading..." : introBio?.content}
             </p>
             
             {/* Skills Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-              {[
-                { skill: "Adobe Photoshop", level: "Expert" },
-                { skill: "Adobe Illustrator", level: "Expert" },
-                { skill: "Adobe InDesign", level: "Expert" },
-                { skill: "AI Integration", level: "Advanced" },
-                { skill: "Process Optimization", level: "Expert" },
-                { skill: "E-commerce Design", level: "Expert" },
-              ].map((item) => (
-                <Card key={item.skill} className="bg-muted hover:bg-muted/80 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="font-mono text-sm">{item.skill}</div>
-                    <div className="text-muted-foreground text-xs">{item.level}</div>
-                  </CardContent>
-                </Card>
-              ))}
+              {isLoadingSkills ? (
+                // Loading skeleton
+                [...Array(6)].map((_, i) => (
+                  <Card key={i} className="bg-muted animate-pulse">
+                    <CardContent className="p-4">
+                      <div className="h-4 bg-background/20 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-background/20 rounded w-1/2"></div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                // Skills grid
+                skills?.map((skill) => (
+                  <Card key={skill.id} className="bg-muted hover:bg-muted/80 transition-colors">
+                    <CardContent className="p-4">
+                      <div className="font-mono text-sm">{skill.skill_name}</div>
+                      <div className="text-muted-foreground text-xs">{skill.level}</div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
           </div>
 
           {/* Work Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {isLoading ? (
+            {isLoadingPosts ? (
               // Loading skeleton
               [...Array(6)].map((_, i) => (
                 <div key={i} className="space-y-4 animate-pulse">
@@ -98,10 +139,11 @@ const Work = () => {
 
           {/* Contact Section */}
           <div className="mt-16 pt-8 border-t border-muted">
-            <h2 className="brutalist-subheading mb-4">Get in Touch</h2>
+            <h2 className="brutalist-subheading mb-4">
+              {isLoadingContact ? "Loading..." : getInTouch?.title}
+            </h2>
             <p className="text-muted-foreground">
-              Available for collaborations and consulting on process optimization 
-              and AI integration in design workflows.
+              {isLoadingContact ? "Loading..." : getInTouch?.content}
             </p>
           </div>
         </div>

@@ -74,6 +74,60 @@ export type Database = {
         }
         Relationships: []
       }
+      content_sections: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          identifier: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          identifier: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          identifier?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          level: string
+          skill_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          level: string
+          skill_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          level?: string
+          skill_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       work_images: {
         Row: {
           caption: string | null
