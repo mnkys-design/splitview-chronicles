@@ -1,8 +1,43 @@
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+// Fetch functions
+const fetchLatestWorkPosts = async () => {
+  const { data, error } = await supabase
+    .from('work_posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(8);
+  
+  if (error) throw error;
+  return data;
+};
+
+const fetchLatestBlogPosts = async () => {
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .order('published_at', { ascending: false })
+    .limit(3);
+  
+  if (error) throw error;
+  return data;
+};
 
 const Index = () => {
+  const { data: workPosts, isLoading: isLoadingWork } = useQuery({
+    queryKey: ['workPosts'],
+    queryFn: fetchLatestWorkPosts,
+  });
+
+  const { data: blogPosts, isLoading: isLoadingBlog } = useQuery({
+    queryKey: ['blogPosts'],
+    queryFn: fetchLatestBlogPosts,
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Main Content */}
@@ -22,9 +57,29 @@ const Index = () => {
 
             {/* Work Grid */}
             <div className="grid grid-cols-2 gap-4 mb-12">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="aspect-square bg-card diagonal-line"></div>
-              ))}
+              {isLoadingWork ? (
+                // Loading skeleton
+                [...Array(8)].map((_, i) => (
+                  <div key={i} className="aspect-square bg-card/50 animate-pulse"></div>
+                ))
+              ) : (
+                // Work posts grid
+                workPosts?.map((post) => (
+                  <Link key={post.id} to={`/work/${post.id}`} className="group">
+                    <div className="aspect-square bg-card overflow-hidden">
+                      {post.main_image_url ? (
+                        <img 
+                          src={post.main_image_url} 
+                          alt={post.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full diagonal-line" />
+                      )}
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
 
             <Link to="/work" className="brutalist-link text-sm">
@@ -71,18 +126,30 @@ const Index = () => {
 
             {/* Blog Teasers */}
             <div className="space-y-8">
-              {[...Array(3)].map((_, i) => (
-                <article key={i} className="p-4 bg-background/5 rounded-sm">
-                  <div className="flex justify-between text-sm text-muted-foreground mb-2">
-                    <time>{`07-${24 + i}-00024`}</time>
-                    <span>(094)</span>
+              {isLoadingBlog ? (
+                // Loading skeleton
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="p-4 bg-background/5 rounded-sm animate-pulse">
+                    <div className="h-4 bg-background/10 rounded w-1/3 mb-2"></div>
+                    <div className="h-16 bg-background/10 rounded"></div>
                   </div>
-                  <p className="brutalist-text">
-                    Aenean ut bibendum ipsum. Nam vitae felis diam. Aenean ligula ligula, malesuada et
-                    volutpat ullamcorper, convallis quis dolor. Quisque elit Avellit.
-                  </p>
-                </article>
-              ))}
+                ))
+              ) : (
+                // Blog posts
+                blogPosts?.map((post) => (
+                  <Link key={post.id} to={`/blog/${post.id}`}>
+                    <article className="p-4 bg-background/5 rounded-sm hover:bg-background/10 transition-colors">
+                      <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                        <time>{new Date(post.published_at).toLocaleDateString()}</time>
+                        <span>({String(post.id).slice(-3)})</span>
+                      </div>
+                      <p className="brutalist-text line-clamp-3">
+                        {post.content}
+                      </p>
+                    </article>
+                  </Link>
+                ))
+              )}
             </div>
 
             <div className="mt-12">
@@ -93,19 +160,6 @@ const Index = () => {
           </div>
         </ScrollArea>
       </div>
-
-      {/* Bottom Navigation */}
-      <nav className="h-16 border-t border-muted flex items-center justify-between px-8 bg-background/80 backdrop-blur-sm fixed bottom-0 left-0 right-0">
-        <Link to="/" className="hover:text-muted-foreground transition-colors">
-          Work Index
-        </Link>
-        <Link to="/" className="hover:text-muted-foreground transition-colors">
-          Lorem Ipsum
-        </Link>
-        <Link to="/blog" className="hover:text-muted-foreground transition-colors">
-          Blog Archive
-        </Link>
-      </nav>
     </div>
   );
 };
