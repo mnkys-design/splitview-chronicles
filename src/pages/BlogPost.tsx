@@ -25,6 +25,8 @@ const BlogPost = () => {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
 
+  console.log("Auth session:", session); // Debug log
+
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blogPost', id],
     queryFn: async () => {
@@ -54,6 +56,7 @@ const BlogPost = () => {
 
   const updatePostMutation = useMutation({
     mutationFn: async ({ title, content }: { title: string, content: string }) => {
+      console.log("Attempting to update post:", { title, content }); // Debug log
       const { error } = await supabase
         .from('blog_posts')
         .update({ 
@@ -63,7 +66,10 @@ const BlogPost = () => {
         })
         .eq('id', id);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Update error:", error); // Debug log
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogPost', id] });
@@ -74,12 +80,12 @@ const BlogPost = () => {
       setIsEditing(false);
     },
     onError: (error) => {
+      console.error('Error updating blog post:', error); // Debug log
       toast({
         title: "Error",
         description: "Failed to update blog post",
         variant: "destructive",
       });
-      console.error('Error updating blog post:', error);
     },
   });
 
@@ -103,7 +109,6 @@ const BlogPost = () => {
   };
 
   const handleImageUploaded = (imageUrl: string) => {
-    // You can either append the image URL to the content or handle it in a different way
     setEditedContent((prev) => `${prev}\n\n![Blog Image](${imageUrl})`);
   };
 
@@ -135,10 +140,10 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-card">
       <ScrollArea className="h-[calc(100vh-4rem)]">
         <div className="brutalist-container py-12">
-          <div className="mb-8 relative group">
+          <div className="mb-8 relative group bg-background p-6 rounded-lg">
             <time className="text-sm text-muted-foreground block mb-4">
               {new Date(post.published_at).toLocaleDateString()}
             </time>
@@ -176,7 +181,7 @@ const BlogPost = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={handleEdit}
                   >
                     <Pencil className="h-4 w-4" />
