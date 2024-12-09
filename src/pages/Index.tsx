@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { Pencil, Save, X, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
+import { RedactedContent } from "@/components/RedactedContent";
 
 // Fetch functions
 const fetchLatestWorkPosts = async () => {
@@ -157,9 +158,18 @@ const Index = () => {
 
   const renderEditableContent = (section: any) => {
     const isEditing = editingSection === section.id;
-    const showContent = !section.private || session;
+    const showFullContent = !section.private || session;
 
-    if (!showContent) return null;
+    if (!session && section.private) {
+      return (
+        <>
+          {section.title && <h2 className="brutalist-subheading mb-4">{section.title}</h2>}
+          <p className="brutalist-text text-muted-foreground mb-8">
+            <RedactedContent length={section.content.length} />
+          </p>
+        </>
+      );
+    }
 
     if (!session) {
       return (
