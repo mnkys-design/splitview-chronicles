@@ -31,7 +31,8 @@ const Work = () => {
               Senior Art Director specializing in graphic optimization and process automation 
               in the E-commerce sector. With over 15 years of experience, I've developed 
               innovative design solutions that merge classical advertising principles with 
-              modern digital platforms.
+              modern digital platforms. My passion lies in integrating artificial intelligence 
+              and automation to enhance creative workflows without compromising on quality.
             </p>
             
             {/* Skills Grid */}
@@ -44,7 +45,7 @@ const Work = () => {
                 { skill: "Process Optimization", level: "Expert" },
                 { skill: "E-commerce Design", level: "Expert" },
               ].map((item) => (
-                <Card key={item.skill} className="border-2 border-foreground bg-transparent">
+                <Card key={item.skill} className="bg-muted hover:bg-muted/80 transition-colors">
                   <CardContent className="p-4">
                     <div className="font-mono text-sm">{item.skill}</div>
                     <div className="text-muted-foreground text-xs">{item.level}</div>
@@ -69,9 +70,9 @@ const Work = () => {
               // Work posts grid
               workPosts?.map((post) => (
                 <Link key={post.id} to={`/work/${post.id}`} className="group">
-                  <Card className="border-2 border-foreground bg-transparent hover:bg-accent/5 transition-colors">
+                  <Card className="bg-muted hover:bg-muted/80 transition-colors">
                     <CardHeader>
-                      <div className="aspect-video mb-4 overflow-hidden bg-muted">
+                      <div className="aspect-video mb-4 overflow-hidden bg-background">
                         {post.main_image_url ? (
                           <img 
                             src={post.main_image_url} 
@@ -96,7 +97,7 @@ const Work = () => {
           </div>
 
           {/* Contact Section */}
-          <div className="mt-16 pt-8 border-t-2 border-foreground">
+          <div className="mt-16 pt-8 border-t border-muted">
             <h2 className="brutalist-subheading mb-4">Get in Touch</h2>
             <p className="text-muted-foreground">
               Available for collaborations and consulting on process optimization 
