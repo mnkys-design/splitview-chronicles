@@ -56,6 +56,15 @@ const Index = () => {
               </p>
             </div>
 
+            {/* Featured Image */}
+            <div className="mb-12 aspect-[4/3] bg-muted overflow-hidden">
+              <img 
+                src={`${supabase.storageUrl}/object/public/content-images/hero-image.jpg`}
+                alt="Michael Chruscinski at work"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
             {/* Work Grid */}
             <div className="grid grid-cols-2 gap-4 mb-12">
               {isLoadingWork ? (
@@ -65,7 +74,7 @@ const Index = () => {
                 ))
               ) : (
                 // Work posts grid
-                workPosts?.map((post) => (
+                workPosts?.map((post, index) => (
                   <Link key={post.id} to={`/work/${post.id}`} className="group">
                     <div className="aspect-square bg-muted overflow-hidden">
                       {post.main_image_url ? (
@@ -75,7 +84,11 @@ const Index = () => {
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="w-full h-full diagonal-line" />
+                        <img 
+                          src={`${supabase.storageUrl}/object/public/content-images/work-${index + 1}.jpg`}
+                          alt={post.title || 'Work showcase'}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
                       )}
                     </div>
                   </Link>
