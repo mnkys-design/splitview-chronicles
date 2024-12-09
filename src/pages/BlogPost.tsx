@@ -9,6 +9,7 @@ import { Pencil, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BlogImageUpload } from "@/components/blog/BlogImageUpload";
 
 const isValidUUID = (uuid: string) => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -33,7 +34,15 @@ const BlogPost = () => {
 
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('*')
+        .select(`
+          *,
+          blog_images (
+            id,
+            image_url,
+            caption,
+            display_order
+          )
+        `)
         .eq('id', id)
         .single();
       
@@ -93,6 +102,11 @@ const BlogPost = () => {
     setEditedContent("");
   };
 
+  const handleImageUploaded = (imageUrl: string) => {
+    // You can either append the image URL to the content or handle it in a different way
+    setEditedContent((prev) => `${prev}\n\n![Blog Image](${imageUrl})`);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -135,6 +149,7 @@ const BlogPost = () => {
                   onChange={(e) => setEditedTitle(e.target.value)}
                   className="brutalist-heading bg-background"
                 />
+                <BlogImageUpload postId={post.id} onImageUploaded={handleImageUploaded} />
                 <Textarea
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
