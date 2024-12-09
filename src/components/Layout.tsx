@@ -37,8 +37,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Auth Button */}
-      <div className="fixed top-4 left-4 z-50">
+      {/* Auth Button - Now in top right */}
+      <div className="fixed top-4 right-4 z-50">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

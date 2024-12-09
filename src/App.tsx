@@ -11,6 +11,8 @@ import WorkPost from "./pages/WorkPost";
 import BlogPost from "./pages/BlogPost";
 import CV from "./pages/CV";
 import Auth from "./pages/Auth";
+import NewBlogPost from "./pages/NewBlogPost";
+import NewWorkPost from "./pages/NewWorkPost";
 
 const queryClient = new QueryClient();
 
@@ -24,8 +26,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/work" element={<Work />} />
+            <Route path="/work/new" element={<NewWorkPost />} />
             <Route path="/work/:id" element={<WorkPost />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/new" element={<NewBlogPost />} />
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/cv" element={<CV />} />
             <Route path="/auth" element={<Auth />} />
