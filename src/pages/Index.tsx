@@ -27,6 +27,17 @@ const fetchLatestBlogPosts = async () => {
   return data;
 };
 
+const fetchContentSection = async (identifier: string) => {
+  const { data, error } = await supabase
+    .from('content_sections')
+    .select('*')
+    .eq('identifier', identifier)
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
 const Index = () => {
   const { data: workPosts, isLoading: isLoadingWork } = useQuery({
     queryKey: ['workPosts'],
@@ -38,6 +49,26 @@ const Index = () => {
     queryFn: fetchLatestBlogPosts,
   });
 
+  const { data: homeIntro } = useQuery({
+    queryKey: ['contentSection', 'home_intro'],
+    queryFn: () => fetchContentSection('home_intro'),
+  });
+
+  const { data: seniorDirector } = useQuery({
+    queryKey: ['contentSection', 'experience_senior_director'],
+    queryFn: () => fetchContentSection('experience_senior_director'),
+  });
+
+  const { data: artDirector } = useQuery({
+    queryKey: ['contentSection', 'experience_art_director'],
+    queryFn: () => fetchContentSection('experience_art_director'),
+  });
+
+  const { data: education } = useQuery({
+    queryKey: ['contentSection', 'education'],
+    queryFn: () => fetchContentSection('education'),
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Main Content */}
@@ -46,12 +77,10 @@ const Index = () => {
         <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-background">
           <div className="p-8">
             <div className="mb-12">
-              <p className="text-sm text-muted-foreground mb-4">Lorem Ipsum</p>
+              <p className="text-sm text-muted-foreground mb-4">{homeIntro?.title || "Loading..."}</p>
               <h1 className="brutalist-heading mb-8">Maximus Gravida</h1>
               <p className="brutalist-text mb-12">
-                Nulla ipsum augue, viverra ac neque a, gravida tempus tellus. Nam vitae nisl risus. 
-                Pellentes que ex libero pharetra sodales vel eu ante. Quisque interdum ipsum a ante 
-                lacinia, a vehicula quam gravida. In hac habitasse.
+                {homeIntro?.content || "Loading..."}
               </p>
             </div>
 
@@ -99,25 +128,25 @@ const Index = () => {
                   <TableRow>
                     <TableCell className="font-mono text-sm">2023 - Present</TableCell>
                     <TableCell>
-                      <span className="font-bold">Senior Art Director</span>
+                      <span className="font-bold">{seniorDirector?.title || "Loading..."}</span>
                       <br />
-                      <span className="text-muted-foreground">Creative Agency XYZ</span>
+                      <span className="text-muted-foreground">{seniorDirector?.content || "Loading..."}</span>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-mono text-sm">2020 - 2023</TableCell>
                     <TableCell>
-                      <span className="font-bold">Art Director</span>
+                      <span className="font-bold">{artDirector?.title || "Loading..."}</span>
                       <br />
-                      <span className="text-muted-foreground">Design Studio ABC</span>
+                      <span className="text-muted-foreground">{artDirector?.content || "Loading..."}</span>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-mono text-sm">2018 - 2020</TableCell>
                     <TableCell>
-                      <span className="font-bold">Senior Designer</span>
+                      <span className="font-bold">{education?.title || "Loading..."}</span>
                       <br />
-                      <span className="text-muted-foreground">Digital Agency DEF</span>
+                      <span className="text-muted-foreground">{education?.content || "Loading..."}</span>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -126,6 +155,7 @@ const Index = () => {
 
             {/* Blog Teasers */}
             <div className="space-y-8">
+              <h3 className="brutalist-subheading mb-6">Latest Posts</h3>
               {isLoadingBlog ? (
                 // Loading skeleton
                 [...Array(3)].map((_, i) => (
@@ -143,6 +173,7 @@ const Index = () => {
                         <time>{new Date(post.published_at).toLocaleDateString()}</time>
                         <span>({String(post.id).slice(-3)})</span>
                       </div>
+                      <h4 className="font-bold mb-2">{post.title}</h4>
                       <p className="brutalist-text line-clamp-3">
                         {post.content}
                       </p>
