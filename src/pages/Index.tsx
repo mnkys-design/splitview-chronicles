@@ -40,9 +40,23 @@ const fetchContentSection = async (identifier: string) => {
     .from('content_sections')
     .select('*')
     .eq('identifier', identifier)
-    .single();
+    .maybeSingle(); // Changed from .single() to .maybeSingle()
   
   if (error) throw error;
+  
+  // Return default content if none exists
+  if (!data) {
+    return {
+      id: 'default',
+      identifier,
+      title: 'Welcome',
+      content: 'This section is yet to be edited.',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      private: false
+    };
+  }
+  
   return data;
 };
 
