@@ -68,15 +68,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       
       {/* Persistent Bottom Navigation */}
       <nav className="h-16 border-t border-muted flex items-center justify-between px-8 bg-background/80 backdrop-blur-sm fixed bottom-0 left-0 right-0">
-        <Link to="/work" className="hover:text-muted-foreground transition-colors">
-          Work Index
-        </Link>
+        <div className="flex items-center gap-8">
+          <Link to="/work" className="hover:text-muted-foreground transition-colors">
+            Work Index
+          </Link>
+          <Link to="/blog" className="hover:text-muted-foreground transition-colors">
+            Blog Archive
+          </Link>
+        </div>
         <Link to="/" className="hover:text-muted-foreground transition-colors">
           Maximus Gravida
         </Link>
-        <Link to="/blog" className="hover:text-muted-foreground transition-colors">
-          Blog Archive
-        </Link>
+        <div className="flex items-center gap-8">
+          <Link to="/cv" className="hover:text-muted-foreground transition-colors">
+            CV
+          </Link>
+          <Link to="/impress" className="hover:text-muted-foreground transition-colors text-sm">
+            Impress + Data
+          </Link>
+        </div>
       </nav>
     </div>
   );

@@ -14,6 +14,7 @@ import CV from "./pages/CV";
 import Auth from "./pages/Auth";
 import NewBlogPost from "./pages/NewBlogPost";
 import NewWorkPost from "./pages/NewWorkPost";
+import ImpressData from "./pages/ImpressData";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/cv" element={<CV />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/impress" element={<ImpressData />} />
           </Routes>
         </Layout>
       </BrowserRouter>
