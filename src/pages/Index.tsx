@@ -42,16 +42,17 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       {/* Main Content */}
       <div className="flex-1 flex flex-col md:flex-row">
-        {/* Left Panel - CV Summary & Work */}
+        {/* Left Panel - Work Showcase */}
         <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-background">
           <div className="p-8">
             <div className="mb-12">
-              <p className="text-sm text-muted-foreground mb-4">Lorem Ipsum</p>
-              <h1 className="brutalist-heading mb-8">Maximus Gravida</h1>
+              <p className="text-sm text-muted-foreground mb-4">Senior Art Director</p>
+              <h1 className="brutalist-heading mb-8">Michael Chruscinski</h1>
               <p className="brutalist-text mb-12">
-                Nulla ipsum augue, viverra ac neque a, gravida tempus tellus. Nam vitae nisl risus. 
-                Pellentes que ex libero pharetra sodales vel eu ante. Quisque interdum ipsum a ante 
-                lacinia, a vehicula quam gravida. In hac habitasse.
+                From classical advertising to AI-driven automation, I bridge the gap 
+                between traditional design principles and modern digital platforms. 
+                With over 15 years of experience, I specialize in optimizing creative 
+                workflows without compromising on quality.
               </p>
             </div>
 
@@ -60,13 +61,13 @@ const Index = () => {
               {isLoadingWork ? (
                 // Loading skeleton
                 [...Array(8)].map((_, i) => (
-                  <div key={i} className="aspect-square bg-card/50 animate-pulse"></div>
+                  <div key={i} className="aspect-square bg-muted animate-pulse"></div>
                 ))
               ) : (
                 // Work posts grid
                 workPosts?.map((post) => (
                   <Link key={post.id} to={`/work/${post.id}`} className="group">
-                    <div className="aspect-square bg-card overflow-hidden">
+                    <div className="aspect-square bg-muted overflow-hidden">
                       {post.main_image_url ? (
                         <img 
                           src={post.main_image_url} 
@@ -83,78 +84,94 @@ const Index = () => {
             </div>
 
             <Link to="/work" className="brutalist-link text-sm">
-              Work Index →
+              View Full Portfolio →
             </Link>
           </div>
         </ScrollArea>
 
-        {/* Right Panel - CV Table & Blog Teasers */}
+        {/* Right Panel - Experience & Blog */}
         <ScrollArea className="w-full md:w-1/2 h-[calc(100vh-4rem)] bg-card">
           <div className="p-8">
-            {/* CV Table */}
+            {/* Experience Table */}
             <div className="mb-12">
               <h2 className="brutalist-heading mb-8">Experience</h2>
               <Table>
                 <TableBody>
                   <TableRow>
-                    <TableCell className="font-mono text-sm">2023 - Present</TableCell>
+                    <TableCell className="font-mono text-sm">2020 - Present</TableCell>
                     <TableCell>
                       <span className="font-bold">Senior Art Director</span>
                       <br />
-                      <span className="text-muted-foreground">Creative Agency XYZ</span>
+                      <span className="text-muted-foreground">Remazing GmbH</span>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Leading AI integration and process automation initiatives for 
+                        E-commerce design optimization.
+                      </p>
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-mono text-sm">2020 - 2023</TableCell>
+                    <TableCell className="font-mono text-sm">2015 - 2020</TableCell>
                     <TableCell>
                       <span className="font-bold">Art Director</span>
                       <br />
-                      <span className="text-muted-foreground">Design Studio ABC</span>
+                      <span className="text-muted-foreground">WirWinzer GmbH</span>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Spearheaded rebranding efforts and established design systems 
+                        for digital platforms.
+                      </p>
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-mono text-sm">2018 - 2020</TableCell>
+                    <TableCell className="font-mono text-sm">2008 - 2015</TableCell>
                     <TableCell>
                       <span className="font-bold">Senior Designer</span>
                       <br />
-                      <span className="text-muted-foreground">Digital Agency DEF</span>
+                      <span className="text-muted-foreground">LunchNow.com</span>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Led the Frankfurt launch campaign and developed automated 
+                        design workflows.
+                      </p>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </div>
 
-            {/* Blog Teasers */}
-            <div className="space-y-8">
-              {isLoadingBlog ? (
-                // Loading skeleton
-                [...Array(3)].map((_, i) => (
-                  <div key={i} className="p-4 bg-background/5 rounded-sm animate-pulse">
-                    <div className="h-4 bg-background/10 rounded w-1/3 mb-2"></div>
-                    <div className="h-16 bg-background/10 rounded"></div>
-                  </div>
-                ))
-              ) : (
-                // Blog posts
-                blogPosts?.map((post) => (
-                  <Link key={post.id} to={`/blog/${post.id}`}>
-                    <article className="p-4 bg-background/5 rounded-sm hover:bg-background/10 transition-colors">
-                      <div className="flex justify-between text-sm text-muted-foreground mb-2">
-                        <time>{new Date(post.published_at).toLocaleDateString()}</time>
-                        <span>({String(post.id).slice(-3)})</span>
-                      </div>
-                      <p className="brutalist-text line-clamp-3">
-                        {post.content}
-                      </p>
-                    </article>
-                  </Link>
-                ))
-              )}
+            {/* Latest Insights */}
+            <div className="mb-8">
+              <h3 className="brutalist-subheading mb-6">Latest Insights</h3>
+              <div className="space-y-8">
+                {isLoadingBlog ? (
+                  // Loading skeleton
+                  [...Array(3)].map((_, i) => (
+                    <div key={i} className="p-4 bg-background/5 rounded-sm animate-pulse">
+                      <div className="h-4 bg-background/10 rounded w-1/3 mb-2"></div>
+                      <div className="h-16 bg-background/10 rounded"></div>
+                    </div>
+                  ))
+                ) : (
+                  // Blog posts
+                  blogPosts?.map((post) => (
+                    <Link key={post.id} to={`/blog/${post.id}`}>
+                      <article className="p-4 bg-background/5 rounded-sm hover:bg-background/10 transition-colors">
+                        <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                          <time>{new Date(post.published_at).toLocaleDateString()}</time>
+                          <span>({String(post.id).slice(-3)})</span>
+                        </div>
+                        <h4 className="font-mono text-base mb-2">{post.title}</h4>
+                        <p className="brutalist-text line-clamp-2 text-muted-foreground">
+                          {post.content}
+                        </p>
+                      </article>
+                    </Link>
+                  ))
+                )}
+              </div>
             </div>
 
             <div className="mt-12">
               <Link to="/blog" className="brutalist-link text-sm">
-                Blog Archive →
+                Read More Insights →
               </Link>
             </div>
           </div>
