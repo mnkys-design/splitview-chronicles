@@ -79,26 +79,32 @@ const Blog = () => {
             </Button>
           )}
         </div>
-        {blogPosts?.map((post) => (
-          <div key={post.id}>
-            {editingPost === post.id ? (
-              <BlogPostEditor
-                title={editedTitle}
-                content={editedContent}
-                onTitleChange={setEditedTitle}
-                onContentChange={setEditedContent}
-                onSave={() => handleSave(post.id)}
-                onCancel={handleCancel}
-              />
-            ) : (
-              <BlogPostList
-                posts={[post]}
-                isAuthenticated={!!session}
-                onEdit={handleEdit}
-              />
-            )}
+        {blogPosts && blogPosts.length > 0 ? (
+          <div className="space-y-16">
+            {blogPosts.map((post) => (
+              <div key={post.id}>
+                {editingPost === post.id ? (
+                  <BlogPostEditor
+                    title={editedTitle}
+                    content={editedContent}
+                    onTitleChange={setEditedTitle}
+                    onContentChange={setEditedContent}
+                    onSave={() => handleSave(post.id)}
+                    onCancel={handleCancel}
+                  />
+                ) : (
+                  <BlogPostList
+                    posts={[post]}
+                    isAuthenticated={!!session}
+                    onEdit={handleEdit}
+                  />
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <p className="text-muted-foreground">No blog posts yet. {session && "Click 'New Post' to create one!"}</p>
+        )}
       </div>
     </div>
   );
