@@ -3,7 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+const isValidUUID = (uuid: string) => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+};
+
 const fetchWorkPost = async (id: string) => {
+  if (!isValidUUID(id)) {
+    throw new Error("Invalid work post ID format");
+  }
+
   const { data: post, error: postError } = await supabase
     .from('work_posts')
     .select('*')
@@ -26,7 +35,7 @@ const fetchWorkPost = async (id: string) => {
 const WorkPost = () => {
   const { id } = useParams();
   
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['workPost', id],
     queryFn: () => fetchWorkPost(id!),
     enabled: !!id,
@@ -44,11 +53,16 @@ const WorkPost = () => {
     );
   }
 
-  if (!data?.post) {
+  if (error || !data?.post) {
     return (
       <div className="min-h-screen bg-background">
         <div className="brutalist-container py-12">
-          <h1 className="brutalist-heading mb-8">Work post not found</h1>
+          <h1 className="brutalist-heading mb-4">Error</h1>
+          <p className="text-muted-foreground">
+            {error?.message === "Invalid work post ID format" 
+              ? "Invalid work post ID format. Please check the URL."
+              : "Work post not found or an error occurred."}
+          </p>
         </div>
       </div>
     );
