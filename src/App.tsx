@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useSessionContext } from "@supabase/auth-helpers-react";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import Work from "./pages/Work";
@@ -16,6 +17,17 @@ import NewWorkPost from "./pages/NewWorkPost";
 
 const queryClient = new QueryClient();
 
+// Protected Route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { session } = useSessionContext();
+  
+  if (!session) {
+    return <Navigate to="/auth" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -26,10 +38,24 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/work" element={<Work />} />
-            <Route path="/work/new" element={<NewWorkPost />} />
+            <Route 
+              path="/work/new" 
+              element={
+                <ProtectedRoute>
+                  <NewWorkPost />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/work/:id" element={<WorkPost />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/new" element={<NewBlogPost />} />
+            <Route 
+              path="/blog/new" 
+              element={
+                <ProtectedRoute>
+                  <NewBlogPost />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/cv" element={<CV />} />
             <Route path="/auth" element={<Auth />} />
