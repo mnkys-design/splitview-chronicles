@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import type { BlogPost } from "@/types/blog";
 
 interface BlogPostListProps {
@@ -11,30 +12,32 @@ interface BlogPostListProps {
 
 export const BlogPostList = ({ posts, isAuthenticated, onEdit }: BlogPostListProps) => {
   return (
-    <div className="space-y-16">
+    <div className="space-y-8">
       {posts?.map((post) => (
-        <article key={post.id} className="border-t border-muted pt-8 group relative">
+        <Card key={post.id} className="p-6 group relative">
           <time className="text-sm text-muted-foreground">
             {new Date(post.published_at).toLocaleDateString()}
           </time>
           <h2 className="brutalist-subheading mt-4 mb-4">{post.title}</h2>
-          <p className="brutalist-text text-muted-foreground mb-4">
+          <p className="brutalist-text text-muted-foreground mb-4 line-clamp-3">
             {post.content}
           </p>
-          <Link to={`/blog/${post.id}`} className="brutalist-link">
-            Read More →
-          </Link>
-          {isAuthenticated && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => onEdit(post)}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          )}
-        </article>
+          <div className="flex items-center justify-between">
+            <Link to={`/blog/${post.id}`} className="brutalist-link">
+              Read More →
+            </Link>
+            {isAuthenticated && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => onEdit(post)}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </Card>
       ))}
     </div>
   );
