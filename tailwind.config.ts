@@ -1,96 +1,75 @@
 import type { Config } from "tailwindcss";
 
 export default {
-	darkMode: ["class"],
-	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
-	],
-	prefix: "",
-	theme: {
-		container: {
-			center: true,
-			padding: '2rem',
-			screens: {
-				'2xl': '1400px'
-			}
-		},
-		extend: {
-			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
-				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
-			},
-			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
-			},
-			keyframes: {
-				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
-				},
-				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
-			},
-			animation: {
-				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
-		}
-	},
-	plugins: [require("tailwindcss-animate")],
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  prefix: "",
+  theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px'
+      }
+    },
+    extend: {
+      fontFamily: {
+        mono: ["JetBrains Mono", "monospace"],
+        sans: ["JetBrains Mono", "monospace"], // Making JetBrains Mono the default font
+      },
+      colors: {
+        border: 'var(--text-color)',
+        input: 'var(--text-color)',
+        ring: 'var(--text-color)',
+        background: 'var(--background-color)',
+        foreground: 'var(--text-color)',
+        primary: {
+          DEFAULT: 'var(--text-color)',
+          foreground: 'var(--background-color)'
+        },
+        secondary: {
+          DEFAULT: 'var(--text-color-alt)',
+          foreground: 'var(--background-color)'
+        },
+        muted: {
+          DEFAULT: 'var(--background-color-alt)',
+          foreground: 'var(--text-color-alt)'
+        },
+        accent: {
+          DEFAULT: 'var(--text-color)',
+          foreground: 'var(--background-color)'
+        },
+        popover: {
+          DEFAULT: 'var(--background-color)',
+          foreground: 'var(--text-color)'
+        },
+        card: {
+          DEFAULT: 'var(--background-color-alt)',
+          foreground: 'var(--text-color)'
+        }
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': 'var(--text-color)',
+            '--tw-prose-headings': 'var(--text-color)',
+            '--tw-prose-links': 'var(--text-color)',
+            '--tw-prose-bold': 'var(--text-color)',
+            '--tw-prose-counters': 'var(--text-color)',
+            '--tw-prose-bullets': 'var(--text-color)',
+            '--tw-prose-quotes': 'var(--text-color)',
+            '--tw-prose-code': 'var(--text-color)',
+            '--tw-prose-hr': 'var(--text-color)',
+            '--tw-prose-th-borders': 'var(--text-color)',
+          },
+        },
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
